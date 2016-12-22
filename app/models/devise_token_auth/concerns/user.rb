@@ -257,8 +257,10 @@ module DeviseTokenAuth::Concerns::User
   def destroy_expired_tokens
     if self.tokens
       self.tokens.delete_if do |cid, v|
-        expiry = v[:expiry] || v["expiry"]
-        DateTime.strptime(expiry.to_s, '%s') < Time.now
+        unless v
+          expiry = v[:expiry] || v["expiry"]
+          DateTime.strptime(expiry.to_s, '%s') < Time.now
+        end
       end
     end
   end
